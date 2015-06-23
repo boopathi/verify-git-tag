@@ -44,7 +44,8 @@ var RemoteHeadPtrPtrPtr = ref.refType(RemoteHeadPtrPtr);
 var SizeT = ref.types.size_t;
 var SizeTPtr = ref.refType(SizeT);
 
-var libgit2 = FFI.Library('/Users/boopathi.rajaa/workspace/libgit2/build/libgit2.dylib', {
+var libgit2 = FFI.Library(
+  path.join('..','libgit2','build','libgit2.dylib'), {
   'git_libgit2_init': ['int', []],
   'git_repository_open': [ 'int', [RepoPtrPtr, 'string']],
   'git_remote_ls': ['int', [RemoteHeadPtrPtrPtr, SizeTPtr, RemotePtr]],
