@@ -2,6 +2,8 @@
 
 var DEBUG = true;
 var GIT_REMOTE_CALLBACKS_VERSION=1;
+var GIT_DIRECTION_FETCH=0;
+var GIT_DIRECTION_PUSH=1;
 
 var FFI = require('ffi');
 var ref = require('ref');
@@ -106,7 +108,7 @@ console.log('callbacks init successful')
 callbacksPtr.credentials = credentialsCallbackFn;
 
 // connect
-err = libgit2.git_remote_connect(remotePtr, 0, callbacksPtr);
+err = libgit2.git_remote_connect(remotePtr, GIT_DIRECTION_FETCH, callbacksPtr);
 if (err) return console.log('failed to connect');
 if (DEBUG) console.log('connection successful');
 
