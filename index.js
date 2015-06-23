@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var DEBUG = true;
+var GIT_REMOTE_CALLBACKS_VERSION=1;
 
 var FFI = require('ffi');
 var ref = require('ref');
@@ -14,6 +15,19 @@ var RepoPtrPtr = ref.refType(RepoPtr);
 var Remote = ref.types.void;
 var RemotePtr = ref.refType(Remote);
 var RemotePtrPtr = ref.refType(RemotePtr);
+
+var Cred = ref.types.void;
+var CredPtr = ref.refType(Cred);
+var CredPtrPtr = ref.refType(CredPtr);
+
+var Void = ref.types.void;
+var VoidPtr = ref.refType(Void);
+
+var CredCallbackFn = FFI.Function('int', [CredPtrPtr, 'string', 'string', 'int', VoidPtr]);
+var RemoteCallbacks = Struct({
+  credentials: CredCallbackFn
+});
+var RemoteCallbacksPtr = ref.refType(RemoteCallbacks);
 
 // var RemoteHead = Struct({
 //   local: 'int',
@@ -35,12 +49,17 @@ var libgit2 = FFI.Library('/Users/boopathi.rajaa/workspace/libgit2/build/libgit2
   'git_repository_open': [ 'int', [RepoPtrPtr, 'string']],
   'git_remote_ls': ['int', [RemoteHeadPtrPtrPtr, SizeTPtr, RemotePtr]],
   'git_remote_lookup': ['int', [RemotePtrPtr, RepoPtr, 'string']],
+  'git_remote_connect': ['int', [RemotePtr, 'int', RemoteCallbacksPtr]],
+  'git_remote_init_callbacks': ['int', [RemoteCallbacksPtr, 'int']],
+  'git_cred_ssh_key_new': ['int', [CredPtrPtr, 'string', 'string', 'string', 'string']],
 });
 
 var err;
 
+// Global init for libgit2
 libgit2.git_libgit2_init();
 
+// Open the repository
 var repoPtrPtr = ref.alloc(RepoPtrPtr);
 err = libgit2.git_repository_open(repoPtrPtr, path.resolve('./'));
 if (err) return console.log('failed repo open');
@@ -49,6 +68,7 @@ if (DEBUG) console.log('open success');
 var repoPtr = repoPtrPtr.deref();
 var repo = repoPtr.deref();
 
+// Lookup the remote for origin
 var remotePtrPtr = ref.alloc(RemotePtrPtr);
 err = libgit2.git_remote_lookup(remotePtrPtr, repoPtr, 'origin')
 if (err) return console.log('failed to lookup remote');
@@ -57,10 +77,43 @@ if (DEBUG) console.log('remote lookup success');
 var remotePtr = remotePtrPtr.deref();
 var remote = remotePtr.deref();
 
+// create creds
+var credentialsCallback = function() {
+  return 0;
+};
+
+var credentialsCallbackFn = FFI.Callback(
+  'int',
+  [CredPtrPtr, 'string', 'string', 'int', VoidPtr],
+  function (cred, url, username, allowed_types, payload) {
+    console.log(username);
+    return litbgit2.git_cred_ssh_key_new(
+      cred,
+      username,
+      path.join(process.env.HOME, '.ssh', 'id_rsa.pub'),
+      path.join(process.env.HOME, '.ssh', 'id_rsa'),
+      '' // passphrase
+    );
+  }
+);
+
+var callbacksPtr = ref.alloc(RemoteCallbacksPtr);
+err = libgit2.git_remote_init_callbacks(callbacksPtr, GIT_REMOTE_CALLBACKS_VERSION);
+if (err) return console.log('callback init failed');
+console.log('callbacks init successful')
+
+callbacksPtr.credentials = credentialsCallbackFn;
+
+// connect
+err = libgit2.git_remote_connect(remotePtr, 0, callbacksPtr);
+if (err) return console.log('failed to connect');
+if (DEBUG) console.log('connection successful');
+
 var remoteHeadPtrPtrPtr = ref.alloc(RemoteHeadPtrPtrPtr);
 var sizePtr = ref.alloc(SizeTPtr);
-err = libgit2.git_remote_ls(remoteHeadPtrPtrPtr, sizePtr, remotePtr);
-if (err) return console.log('remote ls failed');
-if (DEBUG) console.log('remote ls success');
+libgit2.git_remote_ls.async(remoteHeadPtrPtrPtr, sizePtr, remotePtr, function(err, res) {
+  if(err) throw err;
+  console.log("Result =", res);
+});
 
 console.log('success');
