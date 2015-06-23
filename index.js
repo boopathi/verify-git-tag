@@ -25,9 +25,23 @@ var CredPtrPtr = ref.refType(CredPtr);
 var Void = ref.types.void;
 var VoidPtr = ref.refType(Void);
 
-var CredCallbackFn = FFI.Function('int', [CredPtrPtr, 'string', 'string', 'int', VoidPtr]);
+// var CredCallbackFn = FFI.Function('int', [CredPtrPtr, 'string', 'string', 'int', VoidPtr]);
 var RemoteCallbacks = Struct();
-RemoteCallbacks.defineProperty('credentials', CredCallbackFn);
+RemoteCallbacks.defineProperty('version', 'int');
+RemoteCallbacks.defineProperty('sideband_progress', 'pointer');
+RemoteCallbacks.defineProperty('completion', 'pointer');
+RemoteCallbacks.defineProperty('credentials', 'pointer');
+RemoteCallbacks.defineProperty('certificate_check', 'pointer');
+RemoteCallbacks.defineProperty('transfer_progress', 'pointer');
+RemoteCallbacks.defineProperty('update_tips', 'pointer');
+RemoteCallbacks.defineProperty('pack_progress', 'pointer');
+RemoteCallbacks.defineProperty('push_transfer_progress', 'pointer');
+RemoteCallbacks.defineProperty('push_update_reference', 'pointer');
+RemoteCallbacks.defineProperty('push_negotiation', 'pointer');
+RemoteCallbacks.defineProperty('transport', 'pointer');
+RemoteCallbacks.defineProperty('payload', 'pointer');
+
+// RemoteCallbacks.defineProperty('credentials', 'pointer');
 var RemoteCallbacksPtr = ref.refType(RemoteCallbacks);
 
 // var RemoteHead = Struct({
