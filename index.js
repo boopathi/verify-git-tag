@@ -26,9 +26,8 @@ var Void = ref.types.void;
 var VoidPtr = ref.refType(Void);
 
 var CredCallbackFn = FFI.Function('int', [CredPtrPtr, 'string', 'string', 'int', VoidPtr]);
-var RemoteCallbacks = Struct({
-  credentials: CredCallbackFn
-});
+var RemoteCallbacks = Struct();
+RemoteCallbacks.defineProperty('credentials', CredCallbackFn);
 var RemoteCallbacksPtr = ref.refType(RemoteCallbacks);
 
 // var RemoteHead = Struct({
@@ -81,10 +80,6 @@ var remotePtr = remotePtrPtr.deref();
 var remote = remotePtr.deref();
 
 // create creds
-var credentialsCallback = function() {
-  return 0;
-};
-
 var credentialsCallbackFn = FFI.Callback(
   'int',
   [CredPtrPtr, 'string', 'string', 'int', VoidPtr],
@@ -100,16 +95,17 @@ var credentialsCallbackFn = FFI.Callback(
   }
 );
 
-var callbacksPtr = ref.alloc(RemoteCallbacksPtr);
-err = libgit2.git_remote_init_callbacks(callbacksPtr, GIT_REMOTE_CALLBACKS_VERSION);
-if (err) return console.log('callback init failed');
-console.log('callbacks init successful')
-
-callbacksPtr.credentials = credentialsCallbackFn;
+var callbacks = new RemoteCallbacks({
+  credentials: credentialsCallbackFn
+});
+var callbacksPtr = callbacks.ref();
+// err = libgit2.git_remote_init_callbacks(callbacksPtr, GIT_REMOTE_CALLBACKS_VERSION);
+// if (err) return console.log('callback init failed');
+// console.log('callbacks init successful')
 
 // connect
 err = libgit2.git_remote_connect(remotePtr, GIT_DIRECTION_FETCH, callbacksPtr);
-if (err) return console.log('failed to connect');
+if (err) return console.log(err, 'failed to connect');
 if (DEBUG) console.log('connection successful');
 
 var remoteHeadPtrPtrPtr = ref.alloc(RemoteHeadPtrPtrPtr);
