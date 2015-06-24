@@ -22,11 +22,42 @@ pacakge.json:
 }
 ```
 
+### CLI Options
+
+#### `-r | --remote <remote>`
+
+Default remote is origin. Use this to specify remote to fetch tags from
+
+```sh
+$ verify-git-tag -r upstream
+```
+
+#### `-v | --verbose`
+
+On success,
+
+```sh
+$ verify-git-tag -v
+[verify-git-tag] tag v0.1.0 exists
+```
+
+On failure,
+
+```sh
+$ verify-git-tag -v
+[verify-git-tag] tag v0.1.1 does not exist
+[verify-git-tag] git tag v0.1.1 && git push --tags
+```
+
 ## NodeJS API - Usage
+
+### Example
 
 ```js
 var verifyGitTag = require('verify-git-tag');
-verifyGitTag().then(function(exists) {
+verifyGitTag({
+  remote: 'upstream' // default is origin if not specified
+}).then(function(exists) {
   if (exists) console.log('present');
   else console.log('not present');
 }).catch(function(err) {
