@@ -4,6 +4,7 @@
   "description": "Verify Git tag before publishing to npm",
   "main": "lib/verify-git-tag.js",
   "scripts": {
+    "prepublish": "in-publish && npm run build && verify-git-tag || in-install",
     "build": "babel src --out-dir lib --copy-files",
     "watch": "babel src --out-dir lib --copy-files --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
