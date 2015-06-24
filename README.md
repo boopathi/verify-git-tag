@@ -2,6 +2,12 @@
 
 A simple tool to verify the existence of git remote tag to be the same as the package.json version. To be used while publishing.
 
+## Installation
+
+```sh
+npm install verify-git-tag --save-dev
+```
+
 ## Recommended usage - CLI
 
 Use it with [in-publish](https://github.com/iarna/in-publish).
