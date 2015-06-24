@@ -25,7 +25,7 @@ let red = name.red;
 
 let successMessage = `[${green}] tag v${version} exists`;
 let failureMessage = `[${red}] tag v${version} does not exist
-[${red}] ` + `git tag v${version} && git push --tags`;
+[${red}] git tag v${version} && git push --tags`;
 
 VerifyGitTag(opts)
   .then(isExist => {
