@@ -1,13 +1,5 @@
 #!/usr/bin/env node
 
-//
-//
-//
-// EXPERIMENTAL
-//
-//
-//
-
 var DEBUG = true;
 var GIT_REMOTE_CALLBACKS_VERSION=1;
 var GIT_DIRECTION_FETCH=0;
@@ -121,9 +113,9 @@ var callbacks = new RemoteCallbacks({
   credentials: credentialsCallbackFn
 });
 var callbacksPtr = callbacks.ref();
-err = libgit2.git_remote_init_callbacks(callbacksPtr, GIT_REMOTE_CALLBACKS_VERSION);
-if (err) return console.log('callback init failed');
-console.log('callbacks init successful');
+// err = libgit2.git_remote_init_callbacks(callbacksPtr, GIT_REMOTE_CALLBACKS_VERSION);
+// if (err) return console.log('callback init failed');
+// console.log('callbacks init successful')
 
 // connect
 err = libgit2.git_remote_connect(remotePtr, GIT_DIRECTION_FETCH, callbacksPtr);

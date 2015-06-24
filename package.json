@@ -2,14 +2,12 @@
   "name": "verify-git-tag",
   "version": "0.0.0",
   "description": "Verify Git tag before publishing to npm",
-  "main": "lib/verify-git-tag.js",
+  "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir lib --copy-files",
-    "watch": "babel src --out-dir lib --copy-files --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "verify-git-tag": "./lib/cli.js"
+    "verify-git-tag": "./index.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/boopathi/verify-git-tag/issues"
   },
-  "homepage": "https://github.com/boopathi/verify-git-tag"
+  "homepage": "https://github.com/boopathi/verify-git-tag",
+  "dependencies": {
+    "ffi": "^1.3.1",
+    "ref": "^1.0.2",
+    "ref-struct": "^1.0.1"
+  }
 }
