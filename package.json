@@ -1,6 +1,6 @@
 {
   "name": "verify-git-tag",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Verify Git tag before publishing to npm",
   "main": "lib/verify-git-tag.js",
   "scripts": {
