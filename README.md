@@ -51,15 +51,18 @@ $ verify-git-tag -v
 
 ## NodeJS API - Usage
 
+Returns a promise that resolves with `{ version, exists }`
+
 ### Example
 
 ```js
 var verifyGitTag = require('verify-git-tag');
 verifyGitTag({
   remote: 'upstream' // default is origin if not specified
-}).then(function(exists) {
-  if (exists) console.log('present');
-  else console.log('not present');
+}).then(function(result) {
+  console.log(result);
+  // => result.version: <String> version from package.json
+  // => result.exists: <Boolean> git tag exists
 }).catch(function(err) {
   console.error(err);
 });
