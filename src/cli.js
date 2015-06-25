@@ -23,15 +23,15 @@ let opts = {
 let green = name.green;
 let red = name.red;
 
-let successMessage = `[${green}] tag v${version} exists`;
-let failureMessage = `[${red}] tag v${version} does not exist
-[${red}] git tag v${version} && git push --tags`;
-
 VerifyGitTag(opts)
-  .then(isExist => {
+  .then(result => {
+    let successMsg = `[${green}] tag v${result.version} exists`;
+    let failureMsg = `[${red}] tag v${result.version} does not exist
+[${red}] git tag v${result.version} && git push --tags`;
+
     if (program.verbose)
-      console.log(isExist ? successMessage : failureMessage);
-    process.exit(!isExist)
+      console.log(result.exists ? successMsg : failureMsg);
+    process.exit(!result.exists)
   })
   .catch(err => {
     if (DEBUG) console.error(err.stack);

@@ -42,10 +42,10 @@ export default function({remote = 'origin'} = {}) {
         for (let t of tags) {
           let tag = t.split('\t').pop().split('refs/tags/').pop();
           if (tag === 'v' + version || tag === version)
-            return resolve(true);
+            return resolve({ version, exists: true });
         }
 
-        return resolve(false);
+        return resolve({ version, exists: false });
       });
     });
   });
