@@ -1,5 +1,7 @@
 # verify-git-tag
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/boopathi/verify-git-tag.svg)](https://greenkeeper.io/)
+
 A simple tool to verify the existence of git remote tag to be the same as the package.json version. To be used while publishing.
 
 ## Installation
