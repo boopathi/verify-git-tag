@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/boopathi/verify-git-tag",
   "devDependencies": {
-    "babel": "^5.6.5",
-    "in-publish": "^1.1.1"
+    "babel": "^6.23.0",
+    "in-publish": "^2.0.0"
   },
   "dependencies": {
     "colors": "^1.1.2",
